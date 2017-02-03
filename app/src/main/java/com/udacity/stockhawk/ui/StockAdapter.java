@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.udacity.stockhawk.R;
@@ -68,29 +69,35 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
 
         holder.symbol.setText(cursor.getString(Contract.Quote.POSITION_SYMBOL));
-        holder.price.setText(dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE)));
+
+        if ("OK".equals(cursor.getString(Contract.Quote.POSITION_STATUS))) {
+            holder.price.setText(dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE)));
 
 
-        float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
-        float percentageChange = cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
+            float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
+            float percentageChange = cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
 
-        if (rawAbsoluteChange > 0) {
-            holder.change.setBackgroundResource(R.drawable.percent_change_pill_green);
+            if (rawAbsoluteChange > 0) {
+                holder.change.setBackgroundResource(R.drawable.percent_change_pill_green);
+            } else {
+                holder.change.setBackgroundResource(R.drawable.percent_change_pill_red);
+            }
+
+            String change = dollarFormatWithPlus.format(rawAbsoluteChange);
+            String percentage = percentageFormat.format(percentageChange / 100);
+
+            if (PrefUtils.getDisplayMode(context)
+                    .equals(context.getString(R.string.pref_display_mode_absolute_key))) {
+                holder.change.setText(change);
+            } else {
+                holder.change.setText(percentage);
+            }
+            holder.priceContainer.setVisibility(View.VISIBLE);
+            holder.statusContainer.setVisibility(View.GONE);
         } else {
-            holder.change.setBackgroundResource(R.drawable.percent_change_pill_red);
+            holder.priceContainer.setVisibility(View.GONE);
+            holder.statusContainer.setVisibility(View.VISIBLE);
         }
-
-        String change = dollarFormatWithPlus.format(rawAbsoluteChange);
-        String percentage = percentageFormat.format(percentageChange / 100);
-
-        if (PrefUtils.getDisplayMode(context)
-                .equals(context.getString(R.string.pref_display_mode_absolute_key))) {
-            holder.change.setText(change);
-        } else {
-            holder.change.setText(percentage);
-        }
-
-
     }
 
     @Override
@@ -117,6 +124,12 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
         @BindView(R.id.change)
         TextView change;
+
+        @BindView(R.id.price_container)
+        LinearLayout priceContainer;
+
+        @BindView(R.id.status_container)
+        LinearLayout statusContainer;
 
         StockViewHolder(View itemView) {
             super(itemView);

@@ -1,6 +1,7 @@
 package com.udacity.stockhawk.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -36,6 +37,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         {
 
     private static final int STOCK_LOADER = 0;
+
+    static final String KEY_SYMBOL = "SYMBOL_KEY";
+
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
     RecyclerView stockRecyclerView;
@@ -49,7 +53,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onClick(String symbol) {
+        // https://discussions.udacity.com/t/for-stock-hawk-project-do-i-need-to-implement-layout-for-tablet/204768
+        // no tablet layout required, new activity is sufficient to pass.
+        Intent intent = new Intent(this, StockDetailActivity.class);
+        intent.putExtra(KEY_SYMBOL, symbol);
+        startActivity(intent);
         Timber.d("Symbol clicked: %s", symbol);
+
     }
 
     @Override
@@ -70,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         QuoteSyncJob.initialize(this);
         getSupportLoaderManager().initLoader(STOCK_LOADER, null, this);
 
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.END) {
             @Override
             public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
                 return false;

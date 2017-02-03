@@ -17,6 +17,7 @@
         tools:text="GOOG" />
 
     <LinearLayout
+        android:id="@+id/price_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -40,4 +41,16 @@
             android:paddingRight="3dp"
             tools:text="100%" />
     </LinearLayout>
+    <LinearLayout
+        android:id="@+id/status_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="end">
+        <TextView
+            android:text="@string/warn_no_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
 </LinearLayout>

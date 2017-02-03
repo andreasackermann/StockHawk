@@ -6,19 +6,13 @@ import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.preference.PreferenceManager;
-import android.support.annotation.IntDef;
 
-import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 
 import java.io.IOException;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -43,12 +37,9 @@ public final class QuoteSyncJob {
     private static final int PERIODIC_ID = 1;
     private static final int YEARS_OF_HISTORY = 2;
 
-    @Retention(RetentionPolicy.SOURCE)
-    @IntDef({RESPONSE_STATUS_OK, RESPONSE_STATUS_NOT_FOUND})
-    public @interface ResponseStatus {}
+   public static final int STATUS_OK = 0;
+    public static final int STATUS_NO_PRICE = 1;
 
-    public static final int RESPONSE_STATUS_OK = 200;
-    public static final int RESPONSE_STATUS_NOT_FOUND = 404;
 
     private QuoteSyncJob() {
     }
@@ -84,50 +75,54 @@ public final class QuoteSyncJob {
             while (iterator.hasNext()) {
                 String symbol = iterator.next();
 
-
-                Stock stock = quotes.get(symbol);
-                StockQuote quote = stock.getQuote();
-
-                if (quote == null) {
-                    // unknown stock quote
-                    setResponseStatus(context, RESPONSE_STATUS_NOT_FOUND);
-                    return;
-                }
-                float price = quote.getPrice().floatValue();
-                float change = quote.getChange().floatValue();
-                float percentChange = quote.getChangeInPercent().floatValue();
-
-                // WARNING! Don't request historical data for a stock that doesn't exist!
-                // The request will hang forever X_x
-                List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
-
+                String status = "OK";
+                float price = 0f;
+                float change = 0f;
+                float percentChange = 0f;
                 StringBuilder historyBuilder = new StringBuilder();
 
-                for (HistoricalQuote it : history) {
-                    historyBuilder.append(it.getDate().getTimeInMillis());
-                    historyBuilder.append(", ");
-                    historyBuilder.append(it.getClose());
-                    historyBuilder.append("\n");
-                }
+                Stock stock = quotes.get(symbol);
 
+                StockQuote quote = stock.getQuote();
+
+                if (quote.getPrice() == null) {
+                    status = "NO_PRICE";
+                } else {
+
+                    price = quote.getPrice().floatValue();
+                    change = quote.getChange().floatValue();
+                    percentChange = quote.getChangeInPercent().floatValue();
+
+                    try {
+                        // WARNING! Don't request historical data for a stock that doesn't exist!
+                        // The request will hang forever X_x
+                        List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
+
+                        for (HistoricalQuote it : history) {
+                            historyBuilder.append(it.getDate().getTimeInMillis());
+                            historyBuilder.append(", ");
+                            historyBuilder.append(it.getClose());
+                            historyBuilder.append("\n");
+                        }
+                    } catch (IOException e) {
+                        // GGGG has a market and a closing price but no history.
+                        status = "NO_HIST";
+                    }
+                }
                 ContentValues quoteCV = new ContentValues();
                 quoteCV.put(Contract.Quote.COLUMN_SYMBOL, symbol);
                 quoteCV.put(Contract.Quote.COLUMN_PRICE, price);
                 quoteCV.put(Contract.Quote.COLUMN_PERCENTAGE_CHANGE, percentChange);
                 quoteCV.put(Contract.Quote.COLUMN_ABSOLUTE_CHANGE, change);
-
-
                 quoteCV.put(Contract.Quote.COLUMN_HISTORY, historyBuilder.toString());
-
+                quoteCV.put(Contract.Quote.COLUMN_STATUS, status);
                 quoteCVs.add(quoteCV);
-
             }
 
             context.getContentResolver()
                     .bulkInsert(
                             Contract.Quote.URI,
                             quoteCVs.toArray(new ContentValues[quoteCVs.size()]));
-
             Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
             context.sendBroadcast(dataUpdatedIntent);
 
@@ -184,12 +179,5 @@ public final class QuoteSyncJob {
 
 
         }
-    }
-
-    private static void setResponseStatus(Context context, @ResponseStatus int responseStatus) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putInt(context.getString(R.string.pref_response_status_key), responseStatus);
-        editor.commit();
     }
 }
