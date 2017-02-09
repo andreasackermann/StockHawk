@@ -39,7 +39,7 @@ public final class QuoteSyncJob {
     private static final int PERIODIC_ID = 1;
     private static final int YEARS_OF_HISTORY = 2;
 
-   public static final int STATUS_OK = 0;
+    public static final int STATUS_OK = 0;
     public static final int STATUS_NO_PRICE = 1;
 
 
@@ -77,7 +77,7 @@ public final class QuoteSyncJob {
             while (iterator.hasNext()) {
                 String symbol = iterator.next();
 
-                String status = "OK";
+                int status = STATUS_OK;
                 float price = 0f;
                 float change = 0f;
                 float percentChange = 0f;
@@ -88,7 +88,7 @@ public final class QuoteSyncJob {
                 StockQuote quote = stock.getQuote();
 
                 if (quote.getPrice() == null) {
-                    status = "NO_PRICE";
+                    status = STATUS_NO_PRICE;
                 } else {
 
                     price = quote.getPrice().floatValue();
@@ -108,7 +108,7 @@ public final class QuoteSyncJob {
                         }
                     } catch (IOException e) {
                         // GGGG has a market and a closing price but no history.
-                        status = "NO_HIST";
+                        status = STATUS_NO_PRICE;
                     }
                 }
                 ContentValues quoteCV = new ContentValues();

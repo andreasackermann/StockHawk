@@ -38,6 +38,4 @@
     <string name="legend_chart">Displaying chart for %s</string>
 
     <string name="warn_no_price">No price available!</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
 </resources>

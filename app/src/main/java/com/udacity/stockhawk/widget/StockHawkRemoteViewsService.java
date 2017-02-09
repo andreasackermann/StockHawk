@@ -9,6 +9,7 @@ import android.widget.RemoteViewsService;
 
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
+import com.udacity.stockhawk.sync.QuoteSyncJob;
 import com.udacity.stockhawk.ui.MainActivity;
 import com.udacity.stockhawk.util.Helper;
 
@@ -37,8 +38,13 @@ public class StockHawkRemoteViewsService extends RemoteViewsService {
 
                 final long identityToken = Binder.clearCallingIdentity();
 
-
-                data = getContentResolver().query(Contract.Quote.URI, null,  Contract.Quote.COLUMN_STATUS + "=?"  , new String[] { "OK" }, Contract.Quote.COLUMN_SYMBOL + " ASC");
+                // in the widget let's only display those with status=OK - do not waste space
+                data = getContentResolver().query(
+                        Contract.Quote.URI,
+                        null,
+                        Contract.Quote.COLUMN_STATUS + " = ? "  ,
+                        new String[] { Integer.toString(QuoteSyncJob.STATUS_OK) },
+                        Contract.Quote.COLUMN_SYMBOL + " ASC");
 
                 Binder.restoreCallingIdentity(identityToken);
             }

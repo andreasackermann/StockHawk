@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
+import com.udacity.stockhawk.sync.QuoteSyncJob;
 import com.udacity.stockhawk.util.Helper;
 
 import java.text.DecimalFormat;
@@ -66,7 +67,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
         holder.symbol.setText(cursor.getString(Contract.Quote.POSITION_SYMBOL));
 
-        if ("OK".equals(cursor.getString(Contract.Quote.POSITION_STATUS))) {
+        if (QuoteSyncJob.STATUS_OK == cursor.getInt(Contract.Quote.POSITION_STATUS)) {
             holder.price.setText(dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE)));
 
 
