@@ -38,6 +38,12 @@
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
+        <service
+            android:name=".widget.StockHawkRemoteViewsService"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
+        <!-- todo android:enabled="@bool/widget_detail_enabled" ?-->
+
         <activity
             android:name=".ui.StockDetailActivity"
             android:label="@string/title_activity_stock_detail"
@@ -46,6 +52,17 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.udacity.stockhawk.ui.MainActivity" />
         </activity>
+
+        <receiver android:name=".widget.StockHawkAppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.udacity.stockhawk.ACTION_DATA_UPDATED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/stock_hawk_app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>
