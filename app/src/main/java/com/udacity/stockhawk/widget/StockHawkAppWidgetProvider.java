@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
+import com.udacity.stockhawk.ui.MainActivity;
 import com.udacity.stockhawk.ui.StockDetailActivity;
 
 /**
@@ -23,6 +24,11 @@ public class StockHawkAppWidgetProvider extends AppWidgetProvider {
         // There may be multiple widgets active, so update all of them
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_detail);
+
+            Intent intent = new Intent(context, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            views.setOnClickPendingIntent(R.id.widget, pendingIntent);
+            views.setOnClickPendingIntent(R.id.empty, pendingIntent);
 
             views.setRemoteAdapter(R.id.widget_list,
                     new Intent(context, StockHawkRemoteViewsService.class));
