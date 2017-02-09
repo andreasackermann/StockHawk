@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final int STOCK_LOADER = 0;
 
-    static final String KEY_SYMBOL = "SYMBOL_KEY";
+    public static final String KEY_SYMBOL = "SYMBOL_KEY";
 
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         intent.putExtra(KEY_SYMBOL, symbol);
         startActivity(intent);
         Timber.d("Symbol clicked: %s", symbol);
-
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.widget.RemoteViewsService;
 
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
+import com.udacity.stockhawk.ui.MainActivity;
 import com.udacity.stockhawk.util.Helper;
 
 /**
@@ -64,7 +65,8 @@ public class StockHawkRemoteViewsService extends RemoteViewsService {
                 RemoteViews views = new RemoteViews(getPackageName(),
                         R.layout.widget_detail_list_item);
 
-                views.setTextViewText(R.id.symbol, data.getString(data.getColumnIndex(Contract.Quote.COLUMN_SYMBOL)));
+                String symbol =  data.getString(data.getColumnIndex(Contract.Quote.COLUMN_SYMBOL));
+                views.setTextViewText(R.id.symbol,symbol);
 
                 float percentageChange = data.getFloat(data.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE));
 
@@ -75,6 +77,11 @@ public class StockHawkRemoteViewsService extends RemoteViewsService {
                 }
 
                 views.setTextViewText(R.id.change, Helper.formatPercent(percentageChange / 100));
+
+                Intent fillInIntent = new Intent();
+                fillInIntent.putExtra(MainActivity.KEY_SYMBOL, symbol);
+
+                views.setOnClickFillInIntent(R.id.widget_list_item, fillInIntent);
 
                 return views;
             }
