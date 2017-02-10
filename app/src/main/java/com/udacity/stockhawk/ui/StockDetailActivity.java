@@ -39,6 +39,8 @@ public class StockDetailActivity extends AppCompatActivity implements OnChartVal
         setContentView(R.layout.activity_stock_detail);
         ButterKnife.bind(this);
 
+        // https://discussions.udacity.com/t/should-the-graph-in-stockhawk-also-change-with-rtl/160861
+        // no special RTL behaviour required for chart
         mLineChart.setBackgroundColor(Color.WHITE);
         mLineChart.getAxisRight().setEnabled(false);
         mLineChart.setDrawGridBackground(false);

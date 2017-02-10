@@ -10,8 +10,8 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeight"
-        android:paddingLeft="@dimen/abc_list_item_padding_horizontal_material"
-        android:paddingRight="@dimen/abc_list_item_padding_horizontal_material"
+        android:paddingStart="@dimen/abc_list_item_padding_horizontal_material"
+        android:paddingEnd="@dimen/abc_list_item_padding_horizontal_material"
         android:orientation="horizontal">
 
         <TextView
@@ -20,24 +20,25 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="start|center_vertical"
+            android:gravity="start"
+            android:textAlignment="viewStart"
             tools:text="GOOG" />
         <FrameLayout
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="end">
             <TextView
                 android:id="@+id/change"
                 style="@style/PercentChangeTextStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/percent_change_pill_green"
-                android:paddingLeft="3dp"
                 android:paddingStart="3dp"
-                android:paddingRight="3dp"
                 android:paddingEnd="3dp"
+                android:gravity="end"
+                android:layout_gravity="end"
                 tools:text="100%" />
         </FrameLayout>
-
     </LinearLayout>
 </FrameLayout>
