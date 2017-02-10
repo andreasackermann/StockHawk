@@ -42,7 +42,6 @@
             android:name=".widget.StockHawkRemoteViewsService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-        <!-- todo android:enabled="@bool/widget_detail_enabled" ?-->
 
         <activity
             android:name=".ui.StockDetailActivity"
