@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -28,7 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StockDetailActivity extends Activity implements OnChartValueSelectedListener {
+public class StockDetailActivity extends AppCompatActivity implements OnChartValueSelectedListener {
 
     @BindView(R.id.chart) LineChart mLineChart;
 
