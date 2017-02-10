@@ -87,9 +87,6 @@ public class StockDetailActivity extends AppCompatActivity implements OnChartVal
 
 
         }
-        //
-
-        //getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
