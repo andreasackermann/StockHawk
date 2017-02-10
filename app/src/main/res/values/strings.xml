@@ -19,8 +19,6 @@
     <string name="default_stocks_facebook" translatable="false">FB</string>
 
 
-    <string name="action_change_units" translatable="false">@string/pref_display_mode_key</string>
-
     <string name="button_add_stock">Add a stock</string>
     <string name="button_toggle_display">Toggle display</string>
 
@@ -36,6 +34,7 @@
     <string name="toast_stock_added_no_connectivity">Symbol %s added. Will refresh when network available.</string>
     <string name="toast_no_connectivity">Will refresh when network available.</string>
     <string name="toast_deleted">%1$s has been deleted.</string>
+    <string name="toast_quote_details">On %1$s the price was %2$s</string>
     <string name="title_activity_stock_detail">StockDetailActivity</string>
 
     <string name="legend_chart">Displaying chart for %s</string>

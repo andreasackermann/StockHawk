@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Activity;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -12,6 +13,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.util.Helper;
@@ -25,7 +28,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class StockDetailActivity extends Activity {
+public class StockDetailActivity extends Activity implements OnChartValueSelectedListener {
 
     @BindView(R.id.chart) LineChart mLineChart;
 
@@ -40,6 +43,7 @@ public class StockDetailActivity extends Activity {
         mLineChart.setDrawGridBackground(false);
         mLineChart.getXAxis().setValueFormatter(new DateAxisFormatter());
         mLineChart.setDescription(null);
+        mLineChart.setOnChartValueSelectedListener(this);
 
         Intent intent = getIntent();
         String symbol = intent.getStringExtra(MainActivity.KEY_SYMBOL);
@@ -92,9 +96,17 @@ public class StockDetailActivity extends Activity {
 
         @Override
         public String getFormattedValue(float value, AxisBase axis) {
-            DateFormat formatter = new SimpleDateFormat("MMM yy");
-            return formatter.format(new Date(Float.valueOf(value).longValue()));
+            return Helper.formatDate(value);
         }
     }
 
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        Toast.makeText(this, getResources().getString(R.string.toast_quote_details, Helper.formatDate(e.getX()), Helper.formatDollar(e.getY())), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNothingSelected() {
+
+    }
 }

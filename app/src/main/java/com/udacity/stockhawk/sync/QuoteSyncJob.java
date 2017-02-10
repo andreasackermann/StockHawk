@@ -40,7 +40,7 @@ public final class QuoteSyncJob {
     private static final int YEARS_OF_HISTORY = 2;
 
     public static final int STATUS_OK = 0;
-    public static final int STATUS_NO_PRICE = 1;
+    private static final int STATUS_NO_PRICE = 1;
 
 
     private QuoteSyncJob() {
