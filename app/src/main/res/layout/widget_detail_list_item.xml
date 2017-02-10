@@ -20,7 +20,6 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:gravity="start"
             android:textAlignment="viewStart"
             tools:text="GOOG" />
         <FrameLayout
@@ -36,7 +35,6 @@
                 android:background="@drawable/percent_change_pill_green"
                 android:paddingStart="3dp"
                 android:paddingEnd="3dp"
-                android:gravity="end"
                 android:layout_gravity="end"
                 tools:text="100%" />
         </FrameLayout>
