@@ -14,6 +14,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
+import com.udacity.stockhawk.util.Helper;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -69,7 +70,11 @@ public class StockDetailActivity extends Activity {
                     }
                     LineDataSet lineDataSet = new LineDataSet(vals, getResources().getString(R.string.legend_chart, symbol));
                     lineDataSet.setColor(Color.BLACK);
+                    float max = lineDataSet.getYMax();
+                    float min = lineDataSet.getYMin();
+
                     mLineChart.setData(new LineData(lineDataSet));
+                    mLineChart.setContentDescription(getResources().getString(R.string.legend_chart_talkback, symbol, Helper.formatDollar(max), Helper.formatDollar(min) ));
                     mLineChart.invalidate();
                 }
                 historyCursor.close();

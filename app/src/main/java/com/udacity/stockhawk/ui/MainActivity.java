@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getContentResolver().delete(Contract.Quote.makeUriForStock(symbol), null, null);
                 Intent dataUpdatedIntent = new Intent(QuoteSyncJob.ACTION_DATA_UPDATED);
                 MainActivity.this.sendBroadcast(dataUpdatedIntent);
+                Toast toast = Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_deleted, symbol), Toast.LENGTH_SHORT);
+                toast.show();
             }
         }).attachToRecyclerView(stockRecyclerView);
 
@@ -177,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             item.setIcon(R.drawable.ic_percentage);
         } else {
             item.setIcon(R.drawable.ic_dollar);
+
         }
     }
 
