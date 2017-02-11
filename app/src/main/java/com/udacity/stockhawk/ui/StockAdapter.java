@@ -88,10 +88,16 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
                 holder.change.setText(percentage);
             }
             holder.priceContainer.setVisibility(View.VISIBLE);
-            holder.statusContainer.setVisibility(View.GONE);
+            holder.noPriceContainer.setVisibility(View.GONE);
+            holder.unknownContainer.setVisibility(View.GONE);
+        } else if (QuoteSyncJob.STATUS_NO_PRICE == cursor.getInt(Contract.Quote.POSITION_STATUS)) {
+            holder.priceContainer.setVisibility(View.GONE);
+            holder.noPriceContainer.setVisibility(View.VISIBLE);
+            holder.unknownContainer.setVisibility(View.GONE);
         } else {
             holder.priceContainer.setVisibility(View.GONE);
-            holder.statusContainer.setVisibility(View.VISIBLE);
+            holder.noPriceContainer.setVisibility(View.GONE);
+            holder.unknownContainer.setVisibility(View.VISIBLE);
         }
     }
 
@@ -123,8 +129,11 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         @BindView(R.id.price_container)
         LinearLayout priceContainer;
 
-        @BindView(R.id.status_container)
-        LinearLayout statusContainer;
+        @BindView(R.id.status_no_price)
+        LinearLayout noPriceContainer;
+
+        @BindView(R.id.status_unknown)
+        LinearLayout unknownContainer;
 
         StockViewHolder(View itemView) {
             super(itemView);
@@ -136,11 +145,12 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             cursor.moveToPosition(adapterPosition);
-            int symbolColumn = cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
-            clickHandler.onClick(cursor.getString(symbolColumn));
-
+            int status = cursor.getInt(cursor.getColumnIndex(Contract.Quote.COLUMN_STATUS));
+            if (QuoteSyncJob.STATUS_OK == status) {
+                // pointless to show empty charts
+                int symbolColumn = cursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL);
+                clickHandler.onClick(cursor.getString(symbolColumn));
+            }
         }
-
-
     }
 }

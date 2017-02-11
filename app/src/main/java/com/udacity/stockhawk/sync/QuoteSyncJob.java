@@ -40,8 +40,8 @@ public final class QuoteSyncJob {
     private static final int YEARS_OF_HISTORY = 2;
 
     public static final int STATUS_OK = 0;
-    private static final int STATUS_NO_PRICE = 1;
-
+    public static final int STATUS_NO_PRICE = 1;
+    public static final int STATUS_UNKWNON = 3;
 
     private QuoteSyncJob() {
     }
@@ -84,31 +84,33 @@ public final class QuoteSyncJob {
                 StringBuilder historyBuilder = new StringBuilder();
 
                 Stock stock = quotes.get(symbol);
-
-                StockQuote quote = stock.getQuote();
-
-                if (quote.getPrice() == null) {
-                    status = STATUS_NO_PRICE;
+                if (stock ==null) {
+                    status = STATUS_UNKWNON;
                 } else {
-
-                    price = quote.getPrice().floatValue();
-                    change = quote.getChange().floatValue();
-                    percentChange = quote.getChangeInPercent().floatValue();
-
-                    try {
-                        // WARNING! Don't request historical data for a stock that doesn't exist!
-                        // The request will hang forever X_x
-                        List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
-
-                        for (HistoricalQuote it : history) {
-                            historyBuilder.append(it.getDate().getTimeInMillis());
-                            historyBuilder.append(", ");
-                            historyBuilder.append(it.getClose());
-                            historyBuilder.append("\n");
-                        }
-                    } catch (IOException e) {
-                        // GGGG has a market and a closing price but no history.
+                    StockQuote quote = stock.getQuote();
+                    if (quote.getPrice() == null) {
                         status = STATUS_NO_PRICE;
+                    } else {
+
+                        price = quote.getPrice().floatValue();
+                        change = quote.getChange().floatValue();
+                        percentChange = quote.getChangeInPercent().floatValue();
+
+                        try {
+                            // WARNING! Don't request historical data for a stock that doesn't exist!
+                            // The request will hang forever X_x
+                            List<HistoricalQuote> history = stock.getHistory(from, to, Interval.WEEKLY);
+
+                            for (HistoricalQuote it : history) {
+                                historyBuilder.append(it.getDate().getTimeInMillis());
+                                historyBuilder.append(", ");
+                                historyBuilder.append(it.getClose());
+                                historyBuilder.append("\n");
+                            }
+                        } catch (IOException e) {
+                            // GGGG has a market and a closing price but no history.
+                            status = STATUS_NO_PRICE;
+                        }
                     }
                 }
                 ContentValues quoteCV = new ContentValues();
