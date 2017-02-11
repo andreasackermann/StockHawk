@@ -41,5 +41,5 @@
     <string name="legend_chart_talkback">Displaying chart for %1$s. Maximum %2$s, Minimum %3$s</string>
 
     <string name="warn_no_price">No price available!</string>
-    <string name="warn_unknown">Stock symbol unknown!</string>
+    <string name="warn_unknown">Stock symbol malformed!</string>
 </resources>
